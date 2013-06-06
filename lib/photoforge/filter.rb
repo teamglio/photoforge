@@ -10,6 +10,7 @@ class Filter
 	property :description, Text
 	property :cost, Integer
 	property :example_url, Text
+	property :active, Boolean
 
 	belongs_to :filter_provider
 	has n, :filter_transactions

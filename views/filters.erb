@@ -1,6 +1,6 @@
 <div>
 	<h1>Step 2: Choose a filter</h1>
-		<% Filter.all(:order => [ :cost.asc ]).each do |filter|%>
+		<% Filter.all(:active => true).all(:order => [ :cost.asc ]).each do |filter|%>
 		<div>
 			<img src="<%= url filter.example_url %>" width='100px' />
 			<b><%= filter.name.capitalize %></b>: <%= filter.description %> | <b><%= filter.cost %></b> credits | <a href="<%= url 'images/filter/' + filter.name %>">Use</a>	
