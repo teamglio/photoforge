@@ -198,7 +198,7 @@ end
 
 get '/images/save/:image_id' do
 	filename = get_filename
-	FileUtils.move(open(Image.get(params[:image_id].to_i).image.url), 'public/temp/to_save/' + filename)
+	FileUtils.move(open(Image.get(params[:image_id].to_i).image.url), 'public/temp/to_save/' + filename, :force => true)
 	file = open('public/temp/to_save/' + filename)
 	MxitAPI.upload_gallery_image(get_user.mxit_user_id,'PhotoForge', filename, file , params[:code],"http://#{request.host}:#{request.port}/images/save/#{params[:image_id].to_s}")
 	clean_up(filename)
