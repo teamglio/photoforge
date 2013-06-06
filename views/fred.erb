@@ -1,0 +1,24 @@
+<h1>Fred</h1>
+<h2>Month: <%= " #{@start_date.strftime('%B %Y')}" %></h2>
+<table border='1px'>
+	<tr>
+		<th>Filter</th>
+		<th>Uses</th>
+	</tr>
+	<% total = 0 %>
+	<% @filters.each do |filter| %>
+	<tr>
+		<td><%= filter.name %></td>
+		<td><%= filter.filter_transactions.all(:date => @start_date..@end_date).count.to_s %></td>
+	</tr>
+	<% total += filter.filter_transactions.all(:date => @start_date..@end_date).count %>
+	<% end %>
+	<tr>
+		<th>Total</th>
+		<th><%= total.to_s %> </th>
+	</tr>
+	<tr>
+		<th>Cost</th>
+		<th><%= total * 0.05 %> </th>
+	</tr>		
+</table> 
