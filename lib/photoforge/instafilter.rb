@@ -1,7 +1,7 @@
 require 'rest-client'
 
 module Instafilter
-	API_SECRET = 'pdsmkqltyuwn1za8ucpu8oiobrhccu'
+	API_SECRET =  ENV['INSTAFILTER_SECRET']
 	BASE_URL = 'https://thefosk-instafilterio.p.mashape.com'
 
 	def black_and_white(image)
