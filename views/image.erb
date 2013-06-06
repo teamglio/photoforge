@@ -1,7 +1,7 @@
 <div>
 	<h1>Step 3: Your photo</h1>
 	<div>
-		<img src= <%= @image.image.url %> width='300px' />
+		<img src= <%= @image.image.url %> width='100%' height='auto' />
 		<a href= <%= url '/images/save/confirm/' + @image.id.to_s %>>Save to Gallery</a> | <a href= <%= url '/images/delete/confirm/' + @image.id.to_s %>>Delete</a>
 		<p>Your photo has automatically been saved to your <a href=<%= url '/images' %>>Forge</a>.</p>
 	</div>
