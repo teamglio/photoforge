@@ -80,7 +80,7 @@ get '/images/filter/:filter' do
 					redirect to '/images/filter/text/top-text'
 				end
 			when 'supertext'
-				if session[:supertext_top_text] && session[:supertext_middle_text] && session[:supertext_bottom_text] && session[:supertext_text_colour] && session[:supertext_text_font]
+				if session[:supertext_top_text] && session[:supertext_middle_text] && session[:supertext_bottom_text] && session[:supertext_text_colour]
 					file.write(filter.supertext(filename, unfiltered_image, session[:supertext_top_text], session[:supertext_middle_text], session[:supertext_bottom_text], session[:supertext_text_colour]))
 					session[:supertext_top_text], session[:supertext_middle_text], session[:supertext_bottom_text], session[:supertext_text_colour] = nil					
 				else
