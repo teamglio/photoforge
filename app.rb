@@ -36,7 +36,11 @@ end
 
 #step 1: select image
 get '/images/upload' do
-	erb :upload
+	unless get_user.images.count > 30
+		erb :upload
+	else
+		erb "Woops, you're Forge is too full and can't take any more photos. Please <a href='/images'>remove some photos</a> first :)"
+	end
 end
 
 #step2: upload image
