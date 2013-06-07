@@ -299,3 +299,14 @@ helpers do
 	    @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == ['admin', ENV['USER_SECRET']]
   	end
 end
+
+get '/stats' do
+	protected!
+	@user_count = User.all.count
+	@sum = 0
+	CreditTransaction.all(:credit_transaction_type => CreditTransactionType.get(1)).all.each do |transaction|
+	 	@sum += transaction.amount
+	end
+	@credits_bought = @sum
+	erb "Users: #{@user_count} <br /> Credits bought: #{@credits_bought}"
+end
