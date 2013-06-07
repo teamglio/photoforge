@@ -196,6 +196,7 @@ get '/images/publish/:image_id' do
 		get_user.decrease_credits(10,'publish')
 		image = Image.first(:id => params[:image_id].to_i)	
 		image.update(:published => true)
+		image.update(:publish_date => Time.now)
 		erb "Your image will appear in the Stream once reviewed. <a href='/stream'>Ok</a>"
 	else
 		erb "Oops, you're all out of credits! <a href ='/credits'>Get some more</a>!"
