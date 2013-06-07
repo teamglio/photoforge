@@ -1,0 +1,9 @@
+<div>
+	<% @images.each do |image| %>
+		<div>
+			<img src= <%= image.image.url %> width='300px' />
+			<a href= <%= url '/images/moderate/' + image.id.to_s + '?result=accept'%>>Accept</a> | <a href= <%= url '/images/moderate/' + image.id.to_s + '?result=reject'%>>Reject</a>
+		</div>
+		<br />
+	<% end %>
+</div>	

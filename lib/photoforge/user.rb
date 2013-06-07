@@ -3,7 +3,9 @@ class User
 
 	property :id, Serial
 	property :mxit_user_id, Text
+	property :mxit_nickname, Text
 	property :credits, Integer
+	property :reviewer, Boolean
 
 	has n, :images
 	has n, :credit_transactions

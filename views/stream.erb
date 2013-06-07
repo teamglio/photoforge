@@ -1,0 +1,9 @@
+<div>
+	<% @images.each do |image| %>
+		<div>
+			<img src= <%= image.image.url %> width='300px' />
+			<p><%= image.publish_date.strftime('%d-%m-%Y - %H:%M:%S') %> by <%= image.user.mxit_nickname %></p>
+		</div>
+		<br />
+	<% end %>
+</div>	

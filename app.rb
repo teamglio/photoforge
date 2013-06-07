@@ -30,7 +30,8 @@ before do
 end
 	
 get '/' do
-	save_user unless get_user
+	create_user unless get_user
+	update_nickname
 	erb :home
 end
 
@@ -190,11 +191,37 @@ get '/images' do
 	erb :images
 end
 
-get '/allimages' do
-	protected!
-	@images = Image.all
-	erb :images
+get '/images/publish/:image_id' do
+	if get_user.credits >= 10
+		get_user.decrease_credits(10,'publish')
+		image = Image.first(:id => params[:image_id].to_i)	
+		image.update(:published => true)
+		erb "Your image will appear in the Stream once reviewed. <a href='/stream'>Ok</a>"
+	else
+		erb "Oops, you're all out of credits! <a href ='/credits'>Get some more</a>!"
+	end
 end
+
+get '/moderation-queue' do
+	protected!
+	@images = Image.all(:published => true, :moderated => false, :order => [ :publish_date.asc ])
+	erb :moderation_queue
+end
+
+get '/images/moderate/:image_id' do
+	image = Image.first(:id => params[:image_id].to_i)
+	image.update(:moderated => true)	
+	if params[:result] == 'accept'
+		image.update(:accepted => true)
+	end
+	redirect to 'moderation-queue'	
+end
+
+get '/stream' do
+	@images = Image.all(:order => [ :publish_date.desc ], :accepted => true)
+	erb :stream
+end
+
 
 get '/images/save/confirm/:image_id' do
 	redirect to MxitAPI.request_access('content/write', "http://#{request.host}:#{request.port}/images/save/#{params[:image_id].to_s}")
@@ -240,7 +267,6 @@ get '/fred/:year/:month' do
 	@end_date = Date.new(params[:year].to_i, params[:month].to_i + 1, -1)
 	@filters = Filter.all(:filter_provider => FilterProvider.first(:name => 'fred'))
 	erb :fred
-
 end
 
 get '/help' do
@@ -268,9 +294,13 @@ helpers do
 		mxit_user = MxitUser.new(request.env)
 		User.first(:mxit_user_id => mxit_user.user_id)
 	end
-	def save_user
+	def create_user
 		mxit_user = MxitUser.new(request.env)
-		User.create(:mxit_user_id => mxit_user.user_id, :credits => 0)
+		User.create(:mxit_user_id => mxit_user.user_id, :mxit_nickname => mxit_user.nickname, :credits => 0)
+	end
+	def update_nickname
+		mxit_user = MxitUser.new(request.env)
+		User.first(:mxit_user_id => mxit_user.user_id).update(:mxit_nickname => mxit_user.nickname)
 	end
 	def get_filename
 		get_user.mxit_user_id + '-' + Time.now.day.to_s + Time.now.month.to_s + Time.now.day.to_s + Time.now.hour.to_s + Time.now.min.to_s + Time.now.sec.to_s + '.jpg'
