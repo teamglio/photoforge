@@ -303,10 +303,11 @@ end
 get '/stats' do
 	protected!
 	@user_count = User.all.count
+	@image_count = Image.all.count
 	@sum = 0
 	CreditTransaction.all(:credit_transaction_type => CreditTransactionType.get(1)).all.each do |transaction|
 	 	@sum += transaction.amount
 	end
 	@credits_bought = @sum
-	erb "Users: #{@user_count} <br /> Credits bought: #{@credits_bought}"
+	erb "Users: #{@user_count} <br /> Images: #{@image_count} <br />Image-to-user ratio: #{@image_count / @user_count} <br /> Credits bought: #{@credits_bought} (R #{@credits_bought/10})"
 end
