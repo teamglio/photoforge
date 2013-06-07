@@ -309,5 +309,5 @@ get '/stats' do
 	 	@sum += transaction.amount
 	end
 	@credits_bought = @sum
-	erb "Users: #{@user_count} <br /> Images: #{@image_count} <br />Image-to-user ratio: #{@image_count / @user_count} <br /> Credits bought: #{@credits_bought} (R #{@credits_bought/10})"
+	erb "Users: #{@user_count} <br /> Images: #{@image_count} <br />Image-to-user ratio: #{@image_count / @user_count.to_f} <br /> Credits bought: #{@credits_bought} (R #{@credits_bought/10})"
 end
