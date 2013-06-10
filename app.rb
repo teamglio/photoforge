@@ -192,15 +192,17 @@ get '/images' do
 end
 
 get '/images/publish/:image_id' do
-	if get_user.credits >= 10
-		get_user.decrease_credits(10,'publish')
-		image = Image.first(:id => params[:image_id].to_i)	
-		image.update(:published => true)
-		image.update(:publish_date => Time.now)
-		erb "Your image will appear in the Stream once reviewed. <a href='/stream'>Ok</a>"
-	else
-		erb "Oops, you're all out of credits! <a href ='/credits'>Get some more</a>!"
-	end
+	image = Image.first(:id => params[:image_id].to_i)	
+	image.update(:published => true)
+	image.update(:publish_date => Time.now)
+	ses = AWS::SimpleEmailService.new
+	ses.send_email(
+	  :subject => 'PhotoForge Publish',
+	  :from => 'mxit@glio.co.za',
+	  :to => 'mxit@glio.co.za',
+	  :body_text => 'Someone published a photo - http://photoforge.herokuapp.com/moderation-queue'
+	  )		
+	erb "Your image will appear in the Stream once reviewed. <a href='/stream'>Ok</a>"
 end
 
 get '/moderation-queue' do
@@ -219,7 +221,7 @@ get '/images/moderate/:image_id' do
 end
 
 get '/stream' do
-	@images = Image.all(:order => [ :publish_date.desc ], :accepted => true)
+	@images = Image.all(:order => [ :publish_date.desc ], :accepted => true).paginate(:page => params[:page], :per_page => 3)
 	erb :stream
 end
 

@@ -134,6 +134,7 @@ GEM
     subexec (0.2.3)
     tilt (1.3.7)
     uuidtools (2.1.3)
+    will_paginate (3.0.4)
 
 PLATFORMS
   ruby
@@ -149,3 +150,4 @@ DEPENDENCIES
   mini_magick
   rest-client
   sinatra
+  will_paginate

@@ -2,7 +2,7 @@
 	<% @images.each do |image| %>
 		<div>
 			<img src= <%= image.image.url %> width='300px' />
-			<a href= <%= url '/images/save/confirm/' + image.id.to_s %>>Save to Gallery</a> | <a href= <%= url '/images/delete/confirm/' + image.id.to_s %>>Delete</a> | <a href= <%= url '/images/publish/' + image.id.to_s %>>Publish to Stream (10 credits)</a>
+			<a href= <%= url '/images/save/confirm/' + image.id.to_s %>>Save to Gallery</a> | <a href= <%= url '/images/delete/confirm/' + image.id.to_s %>>Delete</a> | <a href= <%= url '/images/publish/' + image.id.to_s %>>Publish to Public Stream</a>
 		</div>
 		<br />
 	<% end %>
