@@ -40,10 +40,10 @@ end
 
 #step 1: select image
 get '/images/upload' do
-	unless get_user.images.count > 30
+	unless get_user.images.count > 20
 		erb :upload
 	else
-		erb "Woops, your Forge is too full and can't take any more photos. Please <a href='/images'>remove some photos</a> first :)"
+		erb "Woops, your Forge is too full (it can only take 20 photos). Please <a href='/images'>remove some photos</a> first :)"
 	end
 end
 
@@ -93,7 +93,12 @@ get '/images/filter/:filter' do
 			when 'picasso'
 				file.write(filter.oil(unfiltered_image))						
 			when 'pattern-border'
-				file.write(filter.apply('bordereffects',unfiltered_image,filename))
+				if session[:pattern_border_colour]
+					file.write(filter.bordereffects(session[:pattern_border_colour],unfiltered_image,filename))
+					session[:pattern_border_colour] = nil					
+				else
+					redirect to '/images/filter/pattern-border/colour'
+				end			
 			when 'bevel-border'
 				file.write(filter.apply('bevelborder',unfiltered_image,filename))
 			when 'vignette'
@@ -182,6 +187,15 @@ end
 get '/images/filter/colour-border/colour-chosen' do
 	session[:colour_border_colour] = params[:colour]
 	redirect to '/images/filter/colour-border'
+end
+
+get '/images/filter/pattern-border/colour' do
+	erb :pattern_border_colour
+end
+
+get '/images/filter/pattern-border/colour-chosen' do
+	session[:pattern_border_colour] = params[:colour]
+	redirect to '/images/filter/pattern-border'
 end
 
 get '/images/:image_id' do
