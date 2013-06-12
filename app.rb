@@ -117,7 +117,7 @@ get '/images/filter/:filter' do
 		get_user.decrease_credits(filter.cost,'filter')
 		filter.record_usage(get_user)
 
-		#clean_up(filename)
+		clean_up(filename)
 
 		redirect to "/images/#{image.id}" 
 	else
