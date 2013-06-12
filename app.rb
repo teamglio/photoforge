@@ -111,7 +111,14 @@ get '/images/filter/:filter' do
 					session[:colour_border_colour] = nil
 				else
 					redirect to '/images/filter/colour-border/colour'
-				end																					
+				end
+			when 'grid-border'
+				if session[:grid_border_colour]
+					file.write(filter.bordergrid(session[:grid_border_colour],unfiltered_image,filename))
+					session[:grid_border_colour] = nil					
+				else
+					redirect to '/images/filter/grid-border/colour'
+				end																										
 			end
 		end
 
@@ -196,6 +203,15 @@ end
 get '/images/filter/pattern-border/colour-chosen' do
 	session[:pattern_border_colour] = params[:colour]
 	redirect to '/images/filter/pattern-border'
+end
+
+get '/images/filter/grid-border/colour' do
+	erb :grid_border_colour
+end
+
+get '/images/filter/grid-border/colour-chosen' do
+	session[:grid_border_colour] = params[:colour]
+	redirect to '/images/filter/grid-border'
 end
 
 get '/images/:image_id' do

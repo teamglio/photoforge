@@ -20,4 +20,13 @@
 		end
 	end
 
+	def bordergrid(colour,file,filename)
+		begin
+			system "bash lib/fredscripts/bordergrid -c #{colour.to_s} #{file.path} public/temp/fred/#{filename}"
+			open('public/temp/fred/' + filename).read
+		rescue
+
+		end
+	end	
+
 end
