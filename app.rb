@@ -196,7 +196,7 @@ end
 
 get '/allimages' do
 	protected!
-	@images = images.all(:order => [ :id.desc ])
+	@images = Image.all(:order => [ :id.desc ])
 	erb :images
 end
 
