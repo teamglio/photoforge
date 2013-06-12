@@ -23,6 +23,8 @@ GEM
     carrierwave-datamapper (0.2.2)
       carrierwave (~> 0.8.0)
       dm-core (~> 1.1)
+    carrierwave-processing (0.0.2)
+      carrierwave
     curb (0.7.18)
     data_mapper (1.2.0)
       dm-aggregates (~> 1.2.0)
@@ -72,6 +74,7 @@ GEM
       dm-core (~> 1.2.0)
     do_postgres (0.10.12)
       data_objects (= 0.10.12)
+    dotenv (0.7.0)
     excon (0.21.0)
     fastercsv (1.5.5)
     fog (1.11.1)
@@ -143,8 +146,10 @@ DEPENDENCIES
   aws-sdk
   carrierwave
   carrierwave-datamapper
+  carrierwave-processing
   data_mapper
   dm-postgres-adapter
+  dotenv
   fog
   meme_captain
   mini_magick

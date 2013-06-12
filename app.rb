@@ -4,6 +4,9 @@ require_relative 'lib/photoforge.rb'
 enable :sessions
 
 configure do
+	if settings.development?
+		Dotenv.load
+	end	
 	CarrierWave.configure do |config|
 	  config.fog_credentials = {
 	    :provider               => 'AWS',                       
@@ -114,7 +117,7 @@ get '/images/filter/:filter' do
 		get_user.decrease_credits(filter.cost,'filter')
 		filter.record_usage(get_user)
 
-		clean_up(filename)
+		#clean_up(filename)
 
 		redirect to "/images/#{image.id}" 
 	else
@@ -188,6 +191,12 @@ end
 
 get '/images' do
 	@images = get_user.images.all(:order => [ :id.desc ])
+	erb :images
+end
+
+get '/allimages' do
+	protected!
+	@images = images.all(:order => [ :id.desc ])
 	erb :images
 end
 
