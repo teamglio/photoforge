@@ -330,7 +330,7 @@ get '/images/moderate/:image_id' do
 end
 
 get '/stream' do
-	@images = Image.all(:order => [ :last_activity_date.desc ], :accepted => true).paginate(:page => params[:page], :per_page => 3)
+	@images = Image.all(:order => [:last_activity_date.desc], :accepted => true).paginate(:page => params[:page], :per_page => 5)
 	erb :stream
 end
 
