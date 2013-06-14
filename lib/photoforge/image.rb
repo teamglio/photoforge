@@ -8,8 +8,15 @@ class Image
 	property :dirty_judgements, Integer, :default  => 0
 	property :moderated, Boolean, :default  => false
 	property :accepted, Boolean, :default  => false
+	property :last_activity_date, DateTime, :default  => Time.now
+
 	mount_uploader :image, Storage
 
 	belongs_to :user
+	has n, :likes
+
+	def activity!
+		self.update(:last_activity_date => Time.now)
+	end
 
 end

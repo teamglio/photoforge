@@ -252,6 +252,22 @@ get '/images/publish/:image_id' do
 	end
 end
 
+get '/images/like/:image_id' do
+	if get_user.credits >= 1
+		image = Image.get(params[:image_id].to_i)	
+		unless Like.first(:user => get_user, :image => image)
+			Like.create(:user => get_user, :image => image, :date => Time.now)
+			image.activity!
+			get_user.decrease_credits(1,'like')
+			redirect to '/stream'
+		else
+			erb "You've already liked this photo :) <a href='/stream'>Back</a>"
+		end
+	else
+		erb "Oops, you're all out of credits! <a href ='/credits'>Get some more</a>!"
+	end
+end
+
 get '/administration-queue' do
 	protected!
 	@images = Image.all(:published => true, :moderated => false, :order => [ :publish_date.asc ])
@@ -314,7 +330,7 @@ get '/images/moderate/:image_id' do
 end
 
 get '/stream' do
-	@images = Image.all(:order => [ :publish_date.desc ], :accepted => true).paginate(:page => params[:page], :per_page => 3)
+	@images = Image.all(:order => [ :last_activity_date.desc ], :accepted => true).paginate(:page => params[:page], :per_page => 3)
 	erb :stream
 end
 

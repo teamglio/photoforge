@@ -6,7 +6,20 @@
 	<% @images.each do |image| %>
 		<div>
 			<img src= <%= image.image.url %> width='300px' />
-			<p><%= image.publish_date.strftime('%d-%m-%Y - %H:%M:%S') %> by <%= image.user.mxit_nickname %></p>
+			<p>
+				<%= image.publish_date.strftime('%d-%m-%Y - %H:%M:%S') %> by <%= image.user.mxit_nickname %> - 
+				
+				<% unless image.likes.empty? %>
+					<%= image.likes.size.to_s %> <img src='<%= url '/images/heart.png' %>' width='10px' height='10px' />
+					-	
+				<% end %>
+
+				<% if image.likes(:user => get_user).empty? %>
+					<a href= <%= url '/images/like/' + image.id.to_s %>>Like</a> (<img src='<%= url '/images/coin.png' %>' width='10px' height='10px' /> 1)
+				<% else %>
+					Liked
+				<% end %>
+			</p>
 		</div>
 		<br />
 	<% end %>

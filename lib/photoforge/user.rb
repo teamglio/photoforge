@@ -10,6 +10,7 @@ class User
 	has n, :images
 	has n, :credit_transactions
 	has n, :filter_transactions
+	has n, :likes
 
 	def increase_credits(amount, credit_transaction_type)
 		CreditTransaction.create(:date => Time.now, :amount => amount, :user => self, :credit_transaction_type => CreditTransactionType.first(:description => credit_transaction_type))
