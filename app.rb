@@ -320,19 +320,31 @@ end
 
 
 get '/images/save/confirm/:image_id' do
-	redirect to MxitAPI.request_access('content/write', "http://#{request.host}:#{request.port}/images/save/#{params[:image_id].to_s}")
+	if get_user.credits >= 5
+		redirect to MxitAPI.request_access('content/write', "http://#{request.host}:#{request.port}/images/save/#{params[:image_id].to_s}")
+	else
+		erb "Oops, you're all out of credits! <a href ='/credits'>Get some more</a>!"
+	end		
 end
 
 get '/images/save/:image_id' do
-	unless params[:error]
-		filename = get_filename
-		FileUtils.move(open(Image.get(params[:image_id].to_i).image.url), 'public/temp/to_save/' + filename, :force => true)
-		file = open('public/temp/to_save/' + filename)
-		MxitAPI.upload_gallery_image(get_user.mxit_user_id,'PhotoForge', filename, file , params[:code],"http://#{request.host}:#{request.port}/images/save/#{params[:image_id].to_s}")
-		clean_up(filename)
-		erb "<div><p>Your image has been saved to your Mxit Gallery! <a href='/images'>Ok</a></p></div>"
+	if get_user.credits >= 5
+		unless params[:error]
+			filename = get_filename
+			FileUtils.move(open(Image.get(params[:image_id].to_i).image.url), 'public/temp/to_save/' + filename, :force => true)
+			file = open('public/temp/to_save/' + filename)
+			MxitAPI.upload_gallery_image(get_user.mxit_user_id,'PhotoForge', filename, file , params[:code],"http://#{request.host}:#{request.port}/images/save/#{params[:image_id].to_s}")
+			
+			get_user.decrease_credits(5,'save')
+
+			clean_up(filename)
+
+			erb "<div><p>Your image has been saved to your Mxit Gallery! <a href='/images'>Ok</a></p></div>"
+		else
+			redirect to '/images'
+		end
 	else
-		redirect to '/images'
+		erb "Oops, you're all out of credits! <a href ='/credits'>Get some more</a>!"
 	end
 end
 

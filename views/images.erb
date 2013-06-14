@@ -1,8 +1,11 @@
 <div>
+	<p><b style="color:#FF0000;">WARNING: If you upload pornography to PhotoForge you <i>will</i> be fined and banned!</b></p>
+</div>
+<div>
 	<% @images.each do |image| %>
 		<div>
 			<img src= <%= image.image.url %> width='300px' />
-			<a href= <%= url '/images/save/confirm/' + image.id.to_s %>>Save to Gallery</a> | <a href= <%= url '/images/publish/' + image.id.to_s %>>Publish to Stream (5 credits)</a> | <a href= <%= url '/images/delete/confirm/' + image.id.to_s %>>Delete</a>
+			<a href= <%= url '/images/save/confirm/' + image.id.to_s %>>Save to Gallery</a> (<img src='<%= url '/images/coin.png' %>' width='10px' height='10px' /> 5) | <a href= <%= url '/images/publish/' + image.id.to_s %>>Publish to Stream</a> (<img src='<%= url '/images/coin.png' %>' width='10px' height='10px' /> 5) | <a href= <%= url '/images/delete/confirm/' + image.id.to_s %>>Delete</a>
 		</div>
 		<br />
 	<% end %>
