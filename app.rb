@@ -241,7 +241,7 @@ get '/images/publish/:image_id' do
 		  :subject => 'PhotoForge Publish',
 		  :from => 'mxit@glio.co.za',
 		  :to => 'mxit@glio.co.za',
-		  :body_text => 'Someone published a photo - http://photoforge.herokuapp.com/moderation-queue'
+		  :body_text => 'Someone published a photo - http://photoforge.herokuapp.com/administration-queue'
 		  )
 
 		get_user.decrease_credits(5,'publish')
