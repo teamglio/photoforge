@@ -6,7 +6,7 @@ class MxitUser
         "HTTP_X_MXIT_LOGIN"=>"emilesilvis7", #m41162520002
         "HTTP_X_MXIT_USERID_R"=>"m41162520002", #
         "HTTP_X_MXIT_HOME"=>"http://www.glio.co.za", 
-        "HTTP_X_MXIT_NICK"=>"Emile+Silvis", #
+        "HTTP_X_MXIT_NICK"=>"xixo", #
         #"HTTP_X_MXIT_USER_INPUT"=>"This+is+my+message+", #
         "HTTP_X_MXIT_PROFILE"=>"en,ZA,1976-05-12,Male,1", #
         "HTTP_X_MXIT_CONTACT"=>"gauteng_events", #

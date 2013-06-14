@@ -231,31 +231,85 @@ get '/allimages' do
 end
 
 get '/images/publish/:image_id' do
-	image = Image.first(:id => params[:image_id].to_i)	
-	image.update(:published => true)
-	image.update(:publish_date => Time.now)
-	ses = AWS::SimpleEmailService.new
-	ses.send_email(
-	  :subject => 'PhotoForge Publish',
-	  :from => 'mxit@glio.co.za',
-	  :to => 'mxit@glio.co.za',
-	  :body_text => 'Someone published a photo - http://photoforge.herokuapp.com/moderation-queue'
-	  )		
-	erb "Your image will appear in the Stream once reviewed. <a href='/stream'>Ok</a>"
+	if get_user.credits >= 5	
+
+		image = Image.first(:id => params[:image_id].to_i)	
+		image.update(:published => true)
+		image.update(:publish_date => Time.now)
+		ses = AWS::SimpleEmailService.new
+		ses.send_email(
+		  :subject => 'PhotoForge Publish',
+		  :from => 'mxit@glio.co.za',
+		  :to => 'mxit@glio.co.za',
+		  :body_text => 'Someone published a photo - http://photoforge.herokuapp.com/moderation-queue'
+		  )
+
+		get_user.decrease_credits(5,'publish')
+
+		erb "Your image will appear in the Stream once reviewed. <a href='/stream'>Ok</a>"
+	else
+		erb "Oops, you're all out of credits! <a href ='/credits'>Get some more</a>!"
+	end
+end
+
+get '/administration-queue' do
+	protected!
+	@images = Image.all(:published => true, :moderated => false, :order => [ :publish_date.asc ])
+	erb :administration_queue
+end
+
+get '/images/administer/:image_id' do
+	image = Image.first(:id => params[:image_id].to_i)
+
+	image.update(:moderated => true)
+
+	if params[:result] == 'accept'
+		image.update(:accepted => true)	
+	elsif params[:result] == 'reject'	
+		image.update(:accepted => false)			
+	end
+
+	redirect to 'administration-queue'	
 end
 
 get '/moderation-queue' do
-	protected!
-	@images = Image.all(:published => true, :moderated => false, :order => [ :publish_date.asc ])
-	erb :moderation_queue
+  	session[:last_moderated].nil? ? session[:last_moderated] = [] : session[:last_moderated]
+
+  	last_moderated_images = []
+  	session[:last_moderated].each do |last_moderated|
+  		last_moderated_images.push(Image.get(last_moderated))
+  	end
+
+  	@image = Image.all(:published => true, :moderated => false).sample(1).first
+
+  	unless last_moderated_images.include?(@image)
+		erb :moderation_queue
+	else
+		erb "Queue empty! :) Please <a href='/moderation-queue'>try again</a> in few minutes."
+	end
 end
 
 get '/images/moderate/:image_id' do
 	image = Image.first(:id => params[:image_id].to_i)
-	image.update(:moderated => true)	
+
 	if params[:result] == 'accept'
-		image.update(:accepted => true)
+		image.update(:clean_judgements => image.clean_judgements + 1)
+
+	elsif params[:result] == 'reject'
+		image.update(:dirty_judgements => image.dirty_judgements + 1)
 	end
+
+	if image.clean_judgements + image.dirty_judgements == 3
+		image.update(:moderated => true)
+		if image.clean_judgements == 3
+			image.update(:accepted => true)
+		else
+			image.update(:accepted => false)
+		end
+	end
+
+	session[:last_moderated].push(image.id)
+
 	redirect to 'moderation-queue'	
 end
 
@@ -270,12 +324,16 @@ get '/images/save/confirm/:image_id' do
 end
 
 get '/images/save/:image_id' do
-	filename = get_filename
-	FileUtils.move(open(Image.get(params[:image_id].to_i).image.url), 'public/temp/to_save/' + filename, :force => true)
-	file = open('public/temp/to_save/' + filename)
-	MxitAPI.upload_gallery_image(get_user.mxit_user_id,'PhotoForge', filename, file , params[:code],"http://#{request.host}:#{request.port}/images/save/#{params[:image_id].to_s}")
-	clean_up(filename)
-	erb "<div><p>Your image has been saved to your Mxit Gallery! <a href='/images'>Ok</a></p></div>"
+	unless params[:error]
+		filename = get_filename
+		FileUtils.move(open(Image.get(params[:image_id].to_i).image.url), 'public/temp/to_save/' + filename, :force => true)
+		file = open('public/temp/to_save/' + filename)
+		MxitAPI.upload_gallery_image(get_user.mxit_user_id,'PhotoForge', filename, file , params[:code],"http://#{request.host}:#{request.port}/images/save/#{params[:image_id].to_s}")
+		clean_up(filename)
+		erb "<div><p>Your image has been saved to your Mxit Gallery! <a href='/images'>Ok</a></p></div>"
+	else
+		redirect to '/images'
+	end
 end
 
 get '/images/delete/confirm/:image_id' do
@@ -382,4 +440,8 @@ get '/stats' do
 	end
 	@credits_bought = @sum
 	erb "Users: #{@user_count} <br /> Images: #{@image_count} <br />Image-to-user ratio: #{@image_count / @user_count.to_f} <br /> Credits bought: #{@credits_bought} (R #{@credits_bought/100})"
+end
+
+get '/foo' do
+	session[:last_moderated] = nil
 end
