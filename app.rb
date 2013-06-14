@@ -282,7 +282,7 @@ get '/moderation-queue' do
 
   	@image = Image.all(:published => true, :moderated => false).sample(1).first
 
-  	unless last_moderated_images.include?(@image)
+  	unless last_moderated_images.include?(@image) || @image.nil?
 		erb :moderation_queue
 	else
 		erb "Queue empty! :) Please <a href='/moderation-queue'>try again</a> in few minutes."
