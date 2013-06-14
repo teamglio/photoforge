@@ -330,9 +330,15 @@ end
 get '/images/save/:image_id' do
 	if get_user.credits >= 5
 		unless params[:error]
+
 			filename = get_filename
-			FileUtils.move(open(Image.get(params[:image_id].to_i).image.url), 'public/temp/to_save/' + filename, :force => true)
+
+			File.open('public/temp/to_save/' + filename, 'wb') do |file|
+				file.write(Image.get(params[:image_id].to_i).image.file.read)
+			end
+
 			file = open('public/temp/to_save/' + filename)
+
 			MxitAPI.upload_gallery_image(get_user.mxit_user_id,'PhotoForge', filename, file , params[:code],"http://#{request.host}:#{request.port}/images/save/#{params[:image_id].to_s}")
 			
 			get_user.decrease_credits(5,'save')
