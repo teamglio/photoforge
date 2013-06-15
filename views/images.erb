@@ -5,7 +5,7 @@
 	<% @images.each do |image| %>
 		<div>
 			<img src= <%= image.image.url %> width='300px' />
-			<a href= <%= url '/images/save/confirm/' + image.id.to_s %>>Save to Gallery</a> (<img src='<%= url '/images/coin.png' %>' width='10px' height='10px' /> 5) | <a href= <%= url '/images/publish/' + image.id.to_s %>>Publish to Stream</a> (<img src='<%= url '/images/coin.png' %>' width='10px' height='10px' /> 5) | <a href= <%= url '/images/delete/confirm/' + image.id.to_s %>>Delete</a>
+			<a href= <%= url '/images/save/confirm/' + image.id.to_s %>>Save to Gallery</a> (5 credits) | <a href= <%= url '/images/publish/' + image.id.to_s %>>Publish to Stream</a> (5 credits) | <a href= <%= url '/images/delete/confirm/' + image.id.to_s %>>Delete</a>
 		</div>
 		<br />
 	<% end %>

@@ -7,17 +7,18 @@
 		<div>
 			<img src= <%= image.image.url %> width='300px' />
 			<p>
-				<%= image.publish_date.strftime('%d-%m-%Y - %H:%M:%S') %> by <%= image.user.mxit_nickname %> - 
+				<%= image.publish_date.strftime('%d-%m-%Y - %H:%M') %> - <%= image.user.mxit_nickname %> 
 				
 				<% unless image.likes.empty? %>
-					<%= image.likes.size.to_s %> <img src='<%= url '/images/heart.png' %>' width='10px' height='10px' />
-					-	
+					-
+					<%= image.likes.size.to_s %> likes	
 				<% end %>
 
 				<% if image.likes(:user => get_user).empty? %>
-					<a href= <%= url '/images/like/' + image.id.to_s %>>Like</a> (<img src='<%= url '/images/coin.png' %>' width='10px' height='10px' /> 1)
+					-
+					<a href= <%= url '/images/like/' + image.id.to_s %>>Like</a> (1 credit)
 				<% else %>
-					Liked
+					(liked)
 				<% end %>
 			</p>
 		</div>

@@ -3,7 +3,7 @@
 		<% Filter.all(:active => true).all(:order => [ :cost.asc ]).each do |filter|%>
 		<div>
 			<img src="<%= url filter.example_url %>" width='100px' />
-			<b><%= filter.name.capitalize %></b>: <%= filter.description %> | <img src='<%= url '/images/coin.png' %>' width='10px' height='10px' /> <b><%= filter.cost %></b> | <a href="<%= url 'images/filter/' + filter.name %>">Use</a>	
+			<b><%= filter.name.capitalize %></b>: <%= filter.description %> | <%= filter.cost %> credits | <a href="<%= url 'images/filter/' + filter.name %>">Use</a>	
 		</div>
 		<br />
 		<% end %>			
