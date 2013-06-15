@@ -285,6 +285,8 @@ get '/images/administer/:image_id' do
 		image.update(:accepted => false)			
 	end
 
+	image.activity!
+
 	redirect to 'administration-queue'	
 end
 
@@ -325,6 +327,8 @@ get '/images/moderate/:image_id' do
 	end
 
 	session[:last_moderated].push(image.id)
+
+	image.activity!
 
 	redirect to 'moderation-queue'	
 end
