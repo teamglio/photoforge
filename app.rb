@@ -375,7 +375,13 @@ get '/images/delete/confirm/:image_id' do
 end
 
 get '/images/delete/:image_id' do
-	Image.get(params[:image_id].to_i).destroy
+	image = Image.get(params[:image_id].to_i)
+	unless image.likes.size > 0
+		image.destroy
+	else
+		image.likes.destroy
+		image.destroy
+	end
 	redirect to '/images'
 end
 
