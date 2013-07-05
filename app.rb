@@ -440,7 +440,7 @@ helpers do
 	end
 	def create_user
 		mxit_user = MxitUser.new(request.env)
-		User.create(:mxit_user_id => mxit_user.user_id, :mxit_nickname => mxit_user.nickname, :credits => 0)
+		User.create(:mxit_user_id => mxit_user.user_id, :mxit_nickname => mxit_user.nickname, :date_joined => Time.now,:credits => 0)
 	end
 	def update_nickname
 		mxit_user = MxitUser.new(request.env)
