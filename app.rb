@@ -129,7 +129,7 @@ get '/images/filter/:filter' do
 		clean_up(filename)
 
 
-		redirect to "/images/hashtags?image_id=#{image.id}"
+		redirect to "/images/hashtags/new?image_id=#{image.id}"
 	else
 		erb "Oops, you're all out of credits! <a href ='/credits'>Get some more</a>!"
 	end
@@ -144,7 +144,6 @@ post '/images/hashtags' do
 	Image.first(:id => params[:image_id].to_i).update(:hashtags => params[:hashtags].gsub('#', ''))
 	redirect to "/images/#{params[:image_id]}"
 end
-
 #---
 
 get '/images/filter/text/top-text' do
