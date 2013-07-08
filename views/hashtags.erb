@@ -1,0 +1,11 @@
+<div>
+	<h1>Step 3: Hashtags</h1>
+	<p>Add <b>hashtags</b> to your image, seperated by a space (optional):</p>
+	<p>Example: #itsfriday #youareawesome #cool<p>
+
+	<form action="/images/hashtags" method="post" enctype="multipart/form-data">
+		<input type="text" name="hashtags" />
+		<input type="hidden" name="image_id" value="<%= params[:image_id] %>" />
+		<input type="submit" name="Done" value="Done" />
+	</form>
+</div>

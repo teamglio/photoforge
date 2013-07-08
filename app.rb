@@ -4,28 +4,23 @@ require_relative 'lib/photoforge.rb'
 enable :sessions
 
 configure do
-	if settings.development?
-		Dotenv.load
-	end	
+	Dotenv.load if settings.development?
 	CarrierWave.configure do |config|
-	  config.fog_credentials = {
-	    :provider               => 'AWS',                       
-	    :aws_access_key_id      => ENV['AWS_KEY'],                     
-	    :aws_secret_access_key  => ENV['AWS_SECRET']
-	  }
-	  config.fog_directory  = 'photoforge'
-	  config.fog_public     = false                                   
+		config.fog_credentials = {
+			:provider               => 'AWS',                       
+			:aws_access_key_id      => ENV['AWS_KEY'],                     
+			:aws_secret_access_key  => ENV['AWS_SECRET']
+		}
+		config.fog_directory = 'photoforge'
+		config.fog_public = false                                   
 	end
-
 	AWS.config(
-	  :access_key_id => ENV['AWS_KEY'],
-	  :secret_access_key => ENV['AWS_SECRET']
-	)		
-
+		:access_key_id => ENV['AWS_KEY'],
+		:secret_access_key => ENV['AWS_SECRET']
+	)
 	DataMapper.setup(:default, ENV['DATABASE_URL'])
 	DataMapper.finalize
 	DataMapper.auto_upgrade!
-
 end
 
 before do
@@ -38,7 +33,9 @@ get '/' do
 	erb :home
 end
 
-#step 1: select image
+##New
+
+#Step 1: select image
 get '/images/upload' do
 	unless get_user.images.count > 20
 		erb :upload
@@ -47,7 +44,7 @@ get '/images/upload' do
 	end
 end
 
-#step2: upload image
+#Step2: upload image
 post '/images' do
 	filename = get_filename
 	FileUtils.move(params['file'][:tempfile],'public/temp/unfiltered/' + filename, :force => true)
@@ -55,7 +52,7 @@ post '/images' do
 	erb :filters
 end
 
-#step3: apply filter
+#Step3: apply filter
 get '/images/filter/:filter' do
 	filter = Filter.first(:name => params[:filter])
 
@@ -131,11 +128,24 @@ get '/images/filter/:filter' do
 
 		clean_up(filename)
 
-		redirect to "/images/#{image.id}" 
+
+		redirect to "/images/hashtags?image_id=#{image.id}"
 	else
 		erb "Oops, you're all out of credits! <a href ='/credits'>Get some more</a>!"
 	end
 end
+
+#Step4: Add hashtags
+get '/images/hashtags/new' do
+	erb :hashtags
+end
+
+post '/images/hashtags' do
+	Image.first(:id => params[:image_id].to_i).update(:hashtags => params[:hashtags].gsub('#', ''))
+	redirect to "/images/#{params[:image_id]}"
+end
+
+#---
 
 get '/images/filter/text/top-text' do
 	erb :text_top_text
@@ -338,6 +348,16 @@ get '/stream' do
 	erb :stream
 end
 
+get '/search' do
+	erb :search
+end
+
+post '/search' do
+	@query = params[:q].gsub('#','').split.first
+	@images = Image.all(:order => [:last_activity_date.desc], :accepted => true, :hashtags => Regexp.new(@query)).paginate(:page => params[:page], :per_page => 5)
+	erb :searchstream
+end
+
 
 get '/images/save/confirm/:image_id' do
 	if get_user.credits >= 5
@@ -484,8 +504,4 @@ get '/stats' do
 	end
 	@credits_bought = @sum
 	erb "Users: #{@user_count} <br /> Images: #{@image_count} <br />Image-to-user ratio: #{@image_count / @user_count.to_f} <br /> Credits bought: #{@credits_bought} (R #{@credits_bought/100})"
-end
-
-get '/foo' do
-	session[:last_moderated] = nil
 end

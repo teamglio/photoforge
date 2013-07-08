@@ -7,7 +7,17 @@
 		<div>
 			<img src= <%= image.image.url %> width='300px' />
 			<p>
-				<%= image.publish_date.strftime('%d-%m-%Y - %H:%M') %> - <%= image.user.mxit_nickname %> 
+				<%= image.publish_date.strftime('%d-%m-%Y - %H:%M') %> - 
+
+				<% unless image.hashtags.empty? %>
+
+					<% image.hashtags.split.each do |hashtag| %>
+		
+					#<%= hashtag %> 
+
+					<% end %> 
+
+				<% end %>
 				
 				<% unless image.likes.empty? %>
 					-

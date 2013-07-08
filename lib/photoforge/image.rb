@@ -9,6 +9,7 @@ class Image
 	property :moderated, Boolean, :default  => false
 	property :accepted, Boolean, :default  => false
 	property :last_activity_date, DateTime, :default  => Time.now
+	property :hashtags, Text
 
 	mount_uploader :image, Storage
 
