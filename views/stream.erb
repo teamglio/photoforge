@@ -9,15 +9,11 @@
 			<p>
 				<%= image.publish_date.strftime('%d-%m-%Y - %H:%M') %> - 
 
-				<% unless image.hashtags.empty? %>
+				<% image.hashtags.split.each do |hashtag| %>
 
-					<% image.hashtags.split.each do |hashtag| %>
-		
 					#<%= hashtag %> 
 
-					<% end %> 
-
-				<% end %>
+				<% end %> 
 				
 				<% unless image.likes.empty? %>
 					-

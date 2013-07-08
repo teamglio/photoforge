@@ -347,11 +347,11 @@ get '/stream' do
 	erb :stream
 end
 
-get '/search' do
+get '/searchbox' do
 	erb :search
 end
 
-post '/search' do
+get '/search' do
 	@query = params[:q].gsub('#','').split.first
 	@images = Image.all(:order => [:last_activity_date.desc], :accepted => true, :hashtags => Regexp.new(@query)).paginate(:page => params[:page], :per_page => 5)
 	erb :searchstream
