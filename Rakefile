@@ -40,6 +40,6 @@ task :send_stats do
 	CreditTransaction.all(:credit_transaction_type => CreditTransactionType.get(1)).all.each do |transaction|
 	 	sum += transaction.amount
 	end
-	StatHat::API.ez_post_count("photoforge - credits bought ", "emile@silvis.co.za", sum)
+	StatHat::API.ez_post_count("photoforge - credits bought", "emile@silvis.co.za", sum)
 	puts "Done."
 end
