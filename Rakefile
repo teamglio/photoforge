@@ -32,17 +32,14 @@ end
 
 desc "Send stats to StatHat"
 task :send_stats do
-	puts "Sending user stats..."
-	StatHat::API.ez_post_count("users", "emile@silvis.co.za", User.all.count)
-	puts "Sending images stats..."
-	StatHat::API.ez_post_count("images", "emile@silvis.co.za", Image.all.count)
-	puts "Sending images-to-user stats..."
-	StatHat::API.ez_post_value("images-to-user ration", "emile@silvis.co.za", (Image.all.count / User.all.count.to_f))
+	puts "Sending stats..."
+	StatHat::API.ez_post_count("photoforge - users", "emile@silvis.co.za", User.all.count)
+	StatHat::API.ez_post_count("photoforge - images", "emile@silvis.co.za", Image.all.count)
+	StatHat::API.ez_post_value("photoforge - images-to-user ratio", "emile@silvis.co.za", (Image.all.count / User.all.count.to_f))
 	sum = 0
 	CreditTransaction.all(:credit_transaction_type => CreditTransactionType.get(1)).all.each do |transaction|
 	 	sum += transaction.amount
 	end
-	puts "Sending credits bought stats..."	
-	StatHat::API.ez_post_count("credits bought ", "emile@silvis.co.za", sum)
+	StatHat::API.ez_post_count("photoforge - credits bought ", "emile@silvis.co.za", sum)
 	puts "Done."
 end
