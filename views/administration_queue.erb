@@ -2,6 +2,11 @@
 	<% @images.each do |image| %>
 		<div>
 			<img src= <%= image.image.url %> width='300px' />
+			<% image.hashtags.split.each do |hashtag| %>
+
+				#<%= hashtag %> 
+
+			<% end %> | 			
 			<a href= <%= url '/images/administer/' + image.id.to_s + '?result=accept'%>>Accept</a> | <a href= <%= url '/images/administer/' + image.id.to_s + '?result=reject'%>>Reject</a>
 		</div>
 		<br />

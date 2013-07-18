@@ -1,7 +1,9 @@
+require_relative 'app.rb'
+require 'stathat'
+
 desc "Populates database with default data"
 task :generate_default_data do
 	puts "Generating default data..."
-	require_relative 'app.rb'
 	
 	CreditTransactionType.create(:description => "credits")
 	CreditTransactionType.create(:description => "filter")
@@ -26,4 +28,21 @@ task :generate_default_data do
 	Filter.create(:name => "colour-border", :description => "Add a coloured border to your photo!", :example_url => 'examples/colour-border.jpg', :cost => 15, :filter_provider => FilterProvider.first(:name => 'instafilter'))
 
 	puts "Done generating default data"
+end
+
+desc "Send stats to StatHat"
+task :send_stats do
+	puts "Sending user stats..."
+	StatHat::API.ez_post_count("users", "emile@silvis.co.za", User.all.count)
+	puts "Sending images stats..."
+	StatHat::API.ez_post_count("images", "emile@silvis.co.za", Image.all.count)
+	puts "Sending images-to-user stats..."
+	StatHat::API.ez_post_value("images-to-user ration", "emile@silvis.co.za", (Image.all.count / User.all.count.to_f))
+	sum = 0
+	CreditTransaction.all(:credit_transaction_type => CreditTransactionType.get(1)).all.each do |transaction|
+	 	sum += transaction.amount
+	end
+	puts "Sending credits bought stats..."	
+	StatHat::API.ez_post_count("credits bought ", "emile@silvis.co.za", sum)
+	puts "Done."
 end
