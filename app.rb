@@ -39,7 +39,6 @@ end
 #Step 1: select image
 get '/images/upload' do
 	unless get_user.images.count > 20
-		StatHat::API.ez_post_value("photoforge - images uploaded", "emile@silvis.co.za", 1)
 		erb :upload
 	else
 		erb "Woops, your Forge is too full (it can only take 20 photos). Please <a href='/images'>remove some photos</a> first :)"
@@ -51,6 +50,7 @@ post '/images' do
 	filename = get_filename
 	FileUtils.move(params['file'][:tempfile],'public/temp/unfiltered/' + filename, :force => true)
 	session[:unfiltered_image] = filename
+	StatHat::API.ez_post_value("photoforge - images uploaded", "emile@silvis.co.za", 1)	
 	erb :filters
 end
 
