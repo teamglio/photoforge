@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'stathat'
+require 'firebase'
 require_relative 'lib/photoforge.rb'
 
 enable :sessions
@@ -22,7 +23,7 @@ configure do
 	DataMapper.setup(:default, ENV['DATABASE_URL'])
 	DataMapper.finalize
 	DataMapper.auto_upgrade!
-	Firebase.base_uri = "https://glio-mxit-users.firebaseio.com/#{ENV['MXIT_APP_NAME']}/"	
+	Firebase.base_uri = "https://glio-mxit-users.firebaseio.com/photoforge"	
 end
 
 before do
