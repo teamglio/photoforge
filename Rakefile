@@ -46,7 +46,7 @@ task :send_stats do
 end
 
 desc "Migrate user data to Firebase"
-task :migrate_users_to_firebase
+task :migrate_users_to_firebase do
 	Firebase.base_uri = "https://glio-mxit-users.firebaseio.com/photoforge"
 	puts "Starting..."
 	User.all.each do |user|

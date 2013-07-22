@@ -22,6 +22,7 @@ configure do
 	DataMapper.setup(:default, ENV['DATABASE_URL'])
 	DataMapper.finalize
 	DataMapper.auto_upgrade!
+	Firebase.base_uri = "https://glio-mxit-users.firebaseio.com/#{ENV['MXIT_APP_NAME']}/"	
 end
 
 before do
@@ -466,6 +467,7 @@ helpers do
 	def update_nickname
 		mxit_user = MxitUser.new(request.env)
 		User.first(:mxit_user_id => mxit_user.user_id).update(:mxit_nickname => mxit_user.nickname)
+		Firebase.set(mxit_user.user_id, {:date_joined => Time.now})		
 	end
 	def get_filename
 		get_user.mxit_user_id + '-' + Time.now.day.to_s + Time.now.month.to_s + Time.now.day.to_s + Time.now.hour.to_s + Time.now.min.to_s + Time.now.sec.to_s + '.jpg'
