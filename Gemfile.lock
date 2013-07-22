@@ -75,8 +75,15 @@ GEM
     do_postgres (0.10.12)
       data_objects (= 0.10.12)
     dotenv (0.7.0)
+    ethon (0.5.12)
+      ffi (>= 1.3.0)
+      mime-types (~> 1.18)
     excon (0.21.0)
     fastercsv (1.5.5)
+    ffi (1.9.0)
+    firebase (0.1.4)
+      json
+      typhoeus (>= 0.6.1)
     fog (1.11.1)
       builder
       excon (~> 0.20)
@@ -138,6 +145,8 @@ GEM
     stringex (1.5.1)
     subexec (0.2.3)
     tilt (1.3.7)
+    typhoeus (0.6.3)
+      ethon (~> 0.5.11)
     uuidtools (2.1.3)
     will_paginate (3.0.4)
 
@@ -152,6 +161,7 @@ DEPENDENCIES
   data_mapper
   dm-postgres-adapter
   dotenv
+  firebase
   fog
   meme_captain
   mini_magick

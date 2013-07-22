@@ -1,5 +1,6 @@
 require_relative 'app.rb'
 require 'stathat'
+require 'firebase'
 
 desc "Populates database with default data"
 task :generate_default_data do
@@ -42,4 +43,14 @@ task :send_stats do
 	end
 	StatHat::API.ez_post_value("photoforge - credits bought", "emile@silvis.co.za", sum)
 	puts "Done."
+end
+
+desc "Migrate user data to Firebase"
+task :migrate_users_to_firebase
+	Firebase.base_uri = "https://glio-mxit-users.firebaseio.com/photoforge"
+	puts "Starting..."
+	User.all.each do |user|
+		Firebase.set(user.mxit_user_id,{:date_joined => user.date_joined})
+	end
+	puts "Done"
 end
