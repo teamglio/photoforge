@@ -464,11 +464,11 @@ helpers do
 	def create_user
 		mxit_user = MxitUser.new(request.env)
 		User.create(:mxit_user_id => mxit_user.user_id, :mxit_nickname => mxit_user.nickname, :date_joined => Time.now,:credits => 0)
+		Firebase.set(mxit_user.user_id, {:date_joined => Time.now})		
 	end
 	def update_nickname
 		mxit_user = MxitUser.new(request.env)
 		User.first(:mxit_user_id => mxit_user.user_id).update(:mxit_nickname => mxit_user.nickname)
-		Firebase.set(mxit_user.user_id, {:date_joined => Time.now})		
 	end
 	def get_filename
 		get_user.mxit_user_id + '-' + Time.now.day.to_s + Time.now.month.to_s + Time.now.day.to_s + Time.now.hour.to_s + Time.now.min.to_s + Time.now.sec.to_s + '.jpg'
