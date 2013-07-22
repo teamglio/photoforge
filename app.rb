@@ -50,7 +50,7 @@ post '/images' do
 	filename = get_filename
 	FileUtils.move(params['file'][:tempfile],'public/temp/unfiltered/' + filename, :force => true)
 	session[:unfiltered_image] = filename
-	StatHat::API.ez_post_value("photoforge - images uploaded", "emile@silvis.co.za", 1)	
+	StatHat::API.ez_post_count("photoforge - images uploaded", "emile@silvis.co.za", 1)	
 	erb :filters
 end
 
