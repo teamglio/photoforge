@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'stathat'
 require_relative 'lib/photoforge.rb'
 
 enable :sessions
@@ -38,6 +39,7 @@ end
 #Step 1: select image
 get '/images/upload' do
 	unless get_user.images.count > 20
+		StatHat::API.ez_post_value("photoforge - images uploaded", "emile@silvis.co.za", 1)
 		erb :upload
 	else
 		erb "Woops, your Forge is too full (it can only take 20 photos). Please <a href='/images'>remove some photos</a> first :)"
