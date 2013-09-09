@@ -54,3 +54,10 @@ task :migrate_users_to_firebase do
 	end
 	puts "Done"
 end
+
+desc "Export user Mxit IDs to CSV"
+task :user_mxit_ids_csv do
+	puts "Exporting..."
+	File.open('public/users.csv', 'w') {|file| file.write(User.all.to_csv(:only => :mxit_user_id))}
+	puts "Done"
+end

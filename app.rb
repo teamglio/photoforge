@@ -509,9 +509,3 @@ get '/stats' do
 	@credits_bought = @sum
 	erb "Users: #{@user_count} <br /> Images: #{@image_count} <br />Image-to-user ratio: #{@image_count / @user_count.to_f} <br /> Credits bought: #{@credits_bought} (R #{@credits_bought/100})"
 end
-
-get '/users.csv' do
-	content_type :csv
-	protected!
-	User.all.to_csv(:only => :mxit_user_id)
-end
