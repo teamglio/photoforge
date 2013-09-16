@@ -362,13 +362,13 @@ end
 
 post '/search' do
 	@query = params[:q].downcase.gsub('#','').split.first
-	@images = Image.all(:order => [:last_activity_date.desc], :accepted => true, :hashtags => Regexp.new(@query)).paginate(:page => params[:page], :per_page => 5)
+	@images = Image.all(:order => [:last_activity_date.desc], :accepted => true, :hashtags => Regexp.new(@query)).paginate(:page => params[:page], :per_page => 20)
 	erb :searchstream
 end
 
 post '/supersearch' do
 	@query = params[:q].downcase.gsub('#','').split.first
-	@images = Image.all(:order => [:last_activity_date.desc], :accepted => true, :hashtags => Regexp.new(@query)).paginate(:page => params[:page], :per_page => 5)
+	@images = Image.all(:order => [:last_activity_date.desc], :accepted => true, :hashtags => Regexp.new(@query))
 	erb :supersearchstream
 end
 

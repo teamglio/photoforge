@@ -1,9 +1,6 @@
 <div>
 	<p><b>Search:</b> #<%= @query.to_s %></p>
 <div>
-<div>
-	<%= will_paginate @images %>
-</div>
 <br />
 <div>
 	<% @images.each do |image| %>
@@ -21,6 +18,4 @@
 	<% end %>
 </div>
 <br />
-<div>
-	<%= will_paginate @images %>
-</div>
+
