@@ -145,7 +145,7 @@ get '/images/hashtags/new' do
 end
 
 post '/images/hashtags' do
-	Image.first(:id => params[:image_id].to_i).update(:hashtags => params[:hashtags].gsub('#', ''))
+	Image.first(:id => params[:image_id].to_i).update(:hashtags => params[:hashtags].downcase.gsub('#', ''))
 	redirect to "/images/#{params[:image_id]}"
 end
 #---
@@ -355,10 +355,21 @@ get '/searchbox' do
 	erb :search
 end
 
+get '/supersearchbox' do
+	protected!
+	erb :supersearch
+end
+
 post '/search' do
-	@query = params[:q].gsub('#','').split.first
+	@query = params[:q].downcase.gsub('#','').split.first
 	@images = Image.all(:order => [:last_activity_date.desc], :accepted => true, :hashtags => Regexp.new(@query)).paginate(:page => params[:page], :per_page => 5)
 	erb :searchstream
+end
+
+post '/supersearch' do
+	@query = params[:q].downcase.gsub('#','').split.first
+	@images = Image.all(:order => [:last_activity_date.desc], :accepted => true, :hashtags => Regexp.new(@query)).paginate(:page => params[:page], :per_page => 5)
+	erb :supersearchstream
 end
 
 

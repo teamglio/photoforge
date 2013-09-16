@@ -1,0 +1,26 @@
+<div>
+	<p><b>Search:</b> #<%= @query.to_s %></p>
+<div>
+<div>
+	<%= will_paginate @images %>
+</div>
+<br />
+<div>
+	<% @images.each do |image| %>
+		<div>
+			<img src= <%= image.image.url %> width='300px' />
+			<br />
+			<% unless image.likes.empty? %>
+				<%= image.likes.size.to_s %> likes	
+			<% end %>			
+			-
+			<%= image.user.mxit_user_id %>
+			</p>
+		</div>
+		<br />
+	<% end %>
+</div>
+<br />
+<div>
+	<%= will_paginate @images %>
+</div>
