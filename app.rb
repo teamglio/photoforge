@@ -49,11 +49,19 @@ end
 
 #Step2: upload image
 post '/images' do
-	filename = get_filename
-	FileUtils.move(params['file'][:tempfile],'public/temp/unfiltered/' + filename, :force => true)
-	session[:unfiltered_image] = filename
-	StatHat::API.ez_post_count("photoforge - images uploaded", "emile@silvis.co.za", 1)	
-	erb :filters
+  unless params['file'].nil?
+    unless File.size(params['file'][:tempfile]) > 102400 #100KB Mxit limit
+			filename = get_filename
+			FileUtils.move(params['file'][:tempfile],'public/temp/unfiltered/' + filename, :force => true)
+			session[:unfiltered_image] = filename
+			StatHat::API.ez_post_count("photoforge - images uploaded", "emile@silvis.co.za", 1)	
+			erb :filters
+    else
+      erb "Woops, your image must be below 100KB. Please try <a href='/images/upload'>uploading a smaller image</a>."
+    end
+  else
+    erb "Woops, you have not sent an image to PhotoForge. Try <a href='/images/upload'>sending an image</a>."
+  end	
 end
 
 #Step3: apply filter
