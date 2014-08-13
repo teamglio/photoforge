@@ -45,16 +45,6 @@ task :send_stats do
 	puts "Done."
 end
 
-desc "Migrate user data to Firebase"
-task :migrate_users_to_firebase do
-	Firebase.base_uri = "https://glio-mxit-users.firebaseio.com/photoforge"
-	puts "Starting..."
-	User.all.each do |user|
-		Firebase.set(user.mxit_user_id,{:date_joined => user.date_joined})
-	end
-	puts "Done"
-end
-
 desc "Export user Mxit IDs to CSV"
 task :user_mxit_ids_csv do
 	puts "Exporting..."
